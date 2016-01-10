@@ -25,7 +25,7 @@ public class Screen extends Canvas
 	// ausgeführt von Main.init()
 	public static void init()
 	{
-		instance = new Screen("Arrows"); // erstellung der singleton-instanz
+		instance = new Screen("Collision-Helper"); // erstellung der singleton-instanz
 	}
 
 	private Screen(String caption)
