@@ -1,2 +1,2 @@
 bin/*
-src/collision/Collision.java
+src/main/Collision.java
