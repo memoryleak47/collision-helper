@@ -1,62 +1,59 @@
 package main;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.LinkedList;
-import java.util.HashMap;
+import javax.swing.JFrame;
+import java.awt.Dimension;
+import java.awt.Canvas;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferStrategy;
+import java.awt.Color;
+import java.awt.Point;
 
-import collision.CollisionHelper;
 import collision.Collision;
 
-public class Main
+public class Main extends Canvas
 {
-	public static final int FRAME_INTERVAL = 40; // intervall in dem tick() und render() ausgeführt werden
-	public static final int TILESIZE = 40;
+	public static final int WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(); // bildschirmbreite
+	public static final int HEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(); // bildschirmhöhe
 
-	public static final float DRAG_X = 1.9f;
-	public static final float DRAG_Y = 1.06f;
-	public static final float GRAVITY = 0.04f;
-	public static final float STANDART_JUMPPOWER = 0.7f;
-	public static final float STANDART_ACCELERATION = 0.18f;
+	private static JFrame frame; // fenster
 
-	public static LinkedList<CollisionHelper> helpers = new LinkedList<CollisionHelper>();
-
-	public void tick()
+	// ausgeführt von Main.init()
+	public static void main(String[] args)
 	{
-		for (int x = 0; x < Screen.WIDTH; x++)
-			for (int y = 0; y < Screen.HEIGHT; y++)
-				if (Collision.inArea(x, y))
-					helpers.add(new CollisionHelper(x, y));
+		new Main().render();
 	}
 
-
-	public static void main(String args[])
+	private Main()
 	{
-		new Main().run(); // neue Main-instanz erstellen und deren run funktion ausführen
+		frame = new JFrame("Collision Helper"); // erstellung des fensters
+		frame.add(this); // diese Screen instanz zum fenster hinzufügen
+		frame.setSize(WIDTH, HEIGHT); // größe des fensters auf die größe des bildschirms setzen
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // -> fenster schließt, wenn man auf das kreuz drückt
+		frame.setVisible(true); // -> fenster ist sichtbar
+		frame.setResizable(true); // -> fenstergröße ist variabel (fullscreen ist möglich)
+		frame.setFocusable(true); // -> man kann das fenster focusen, listeners können nur funktionieren wenn das fenster gefocust ist
+		requestFocusInWindow();  // das fenster wird fokusiert
 	}
 
-	private void run()
+	// called by Main.render() in a fixed rate
+	public void render()
 	{
-		init(); // initalisieren
-
-		new Timer().scheduleAtFixedRate(new TimerTask() // wiederhole alle <FRAME_INTERVAL> ms
+		Graphics g = getGraphics();
+		g.setColor(Color.BLACK); // setze farbe auf schwarz
+		g.fillRect(0, 0, WIDTH, HEIGHT); // fülle den bildschirm schwarz
+		g.setColor(Color.RED); // setze farbe auf schwarz
+		for (int x = 0; x < WIDTH; x++)
 		{
-			@Override
-			public void run()
+			for (int y = 0; y < HEIGHT; y++)
 			{
-				tick(); // tick
-				render(); // render
+				if (Collision.inArea(x, y))
+				{
+					g.fillRect(x, y, 1, 1);
+				}
 			}
-		}, FRAME_INTERVAL, FRAME_INTERVAL);
-	}
-
-	private void init()
-	{
-		Screen.init(); // init Screen
-	}
-
-	private void render()
-	{
-		Screen.render(); // rendere die menuList auf den 'Screen
+		}
+		g.dispose(); // dispose die graphics
 	}
 }

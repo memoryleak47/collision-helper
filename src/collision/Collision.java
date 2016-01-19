@@ -7,7 +7,7 @@ public class Collision
 	public static boolean inArea(int x, int y)
 	{
 		// Collision is defined in here
-		return (x < 200 && x > 150 && y < 500 && y > 300);
+		return (x < 400 && x > 150 && y < 500 && y > 300);
 	}
 
 }
