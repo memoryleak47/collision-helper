@@ -1,4 +1,4 @@
-package collision;
+package main;
 
 // The only file you should change for testing purposes
 

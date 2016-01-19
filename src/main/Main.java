@@ -10,19 +10,22 @@ import java.awt.image.BufferStrategy;
 import java.awt.Color;
 import java.awt.Point;
 
-import collision.Collision;
-
 public class Main extends Canvas
 {
 	public static final int WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(); // bildschirmbreite
 	public static final int HEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight(); // bildschirmhöhe
 
-	private static JFrame frame; // fenster
+	private JFrame frame; // fenster
+	private BufferStrategy bs;
 
 	// ausgeführt von Main.init()
 	public static void main(String[] args)
 	{
-		new Main().render();
+		Main main = new Main();
+		while (true)
+		{
+			main.render();
+		}
 	}
 
 	private Main()
@@ -40,7 +43,13 @@ public class Main extends Canvas
 	// called by Main.render() in a fixed rate
 	public void render()
 	{
-		Graphics g = getGraphics();
+		bs = getBufferStrategy();
+		if (bs == null)
+		{
+			createBufferStrategy(2);
+			return;
+		}
+		Graphics g = bs.getDrawGraphics();
 		g.setColor(Color.BLACK); // setze farbe auf schwarz
 		g.fillRect(0, 0, WIDTH, HEIGHT); // fülle den bildschirm schwarz
 		g.setColor(Color.RED); // setze farbe auf schwarz
@@ -54,6 +63,7 @@ public class Main extends Canvas
 				}
 			}
 		}
-		g.dispose(); // dispose die graphics
+		g.dispose();
+		bs.show();
 	}
 }
